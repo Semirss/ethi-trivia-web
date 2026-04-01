@@ -16,6 +16,7 @@
         <div id="unity-progress-bar-empty">
           <div id="unity-progress-bar-full"></div>
         </div>
+        <div id="unity-progress-text" style="color: white; font-family: sans-serif; text-align: center; margin-top: 10px; font-size: 14px; text-shadow: 1px 1px 2px black;">Downloading... 0.0 MB / 30.5 MB</div>
       </div>
       <div id="unity-warning"> </div>
     </div>
@@ -30,7 +31,9 @@
       var canvas = document.querySelector("#unity-canvas");
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var progressText = document.querySelector("#unity-progress-text");
       var warningBanner = document.querySelector("#unity-warning");
+      var totalMB = 30.5; // Estimate total size (wasm + data + scripts)
 
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
@@ -99,6 +102,10 @@
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
+          if (progressText) {
+            var downloadedMB = (progress * totalMB).toFixed(1);
+            progressText.innerText = "Downloading... " + downloadedMB + " MB / " + totalMB + " MB";
+          }
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
         }).catch((message) => {
