@@ -11,12 +11,23 @@
   <body>
     <div id="unity-container">
       <canvas id="unity-canvas" width=960 height=540 tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
+      
+      <div id="loading-screen">
+        <div class="glass-box">
+          <div class="spinner"></div>
+          <h1 class="game-title">Ethio Trivia</h1>
+          <div class="game-subtitle">Loading Knowledge...</div>
+          
+          <div id="custom-progress-container">
+            <div id="custom-progress-bar">
+              <div id="custom-progress-fill"></div>
+            </div>
+            <div id="loading-text">
+              <span id="loading-percentage">0%</span>
+              <span id="loading-mb">0.0 MB / 30.5 MB</span>
+            </div>
+          </div>
         </div>
-        <div id="unity-progress-text">Downloading... 0.0 MB / 30.5 MB</div>
       </div>
       <div id="unity-warning"> </div>
     </div>
@@ -29,11 +40,11 @@
 
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var progressText = document.querySelector("#unity-progress-text");
+      var loadingScreen = document.querySelector("#loading-screen");
+      var customProgressFill = document.querySelector("#custom-progress-fill");
+      var loadingPercentage = document.querySelector("#loading-percentage");
+      var loadingMb = document.querySelector("#loading-mb");
       var warningBanner = document.querySelector("#unity-warning");
-      var totalMB = 30.5; // Estimate total size (wasm + data + scripts)
 
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
@@ -95,19 +106,27 @@
       }
 
 
-      loadingBar.style.display = "block";
+      loadingScreen.style.display = "flex";
+
+      // Total build size in bytes
+      var totalSizeInBytes = 31954750;
+      var totalMb = (totalSizeInBytes / (1024 * 1024)).toFixed(1);
+      loadingMb.textContent = `0.0 MB / ${totalMb} MB`;
 
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-          if (progressText) {
-            var downloadedMB = (progress * totalMB).toFixed(1);
-            progressText.innerText = "Downloading... " + downloadedMB + " MB / " + totalMB + " MB";
-          }
+          var pct = Math.round(100 * progress);
+          customProgressFill.style.width = pct + "%";
+          loadingPercentage.textContent = pct + "%";
+          
+          var currentMb = (progress * totalSizeInBytes / (1024 * 1024)).toFixed(1);
+          loadingMb.textContent = `${currentMb} MB / ${totalMb} MB`;
         }).then((unityInstance) => {
-          loadingBar.style.display = "none";
+          loadingScreen.style.opacity = "0";
+          setTimeout(() => { loadingScreen.style.display = "none"; }, 800);
+          canvas.classList.add("show");
         }).catch((message) => {
           alert(message);
         });

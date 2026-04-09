@@ -1,61 +1,147 @@
-body { padding: 0; margin: 0; background: #150a0a; overflow: hidden; }
-#unity-container { position: fixed; width: 100%; height: 100%; }
+body {
+  padding: 0;
+  margin: 0;
+  background: radial-gradient(circle at 50% 50%, #1a1a2e, #0f0f1c);
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#unity-container { 
+  position: fixed; 
+  width: 100%; 
+  height: 100%; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
+
 #unity-canvas { 
-    width: 100%; 
-    height: 100%; 
-    background: radial-gradient(circle at 50% 30%, #d86831 0%, #a03c1c 40%, #3d1b11 75%, #0f0706 100%);
-    box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+  width: 100%; 
+  height: 100%; 
+  position: absolute; 
+  z-index: 1; 
+  top: 0; 
+  left: 0; 
+  opacity: 0; 
+  transition: opacity 1s ease-in-out; 
 }
-#unity-loading-bar { 
-    position: absolute; 
-    left: 50%; 
-    top: 50%; 
-    transform: translate(-50%, -50%); 
-    display: none;
-    background: rgba(25, 10, 5, 0.7);
-    padding: 40px 50px;
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.1);
-    border: 1px solid rgba(255, 120, 50, 0.2);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    text-align: center;
+
+#unity-canvas.show { 
+  opacity: 1; 
+  z-index: 10; 
 }
-#unity-logo { 
-    margin: 0 auto;
-    width: 154px; 
-    height: 130px; 
-    background: url('unity-logo-dark.png') no-repeat center;
-    filter: drop-shadow(0 0 15px rgba(255, 150, 50, 0.5));
-    animation: pulseLogo 3s infinite alternate;
+
+#loading-screen {
+  position: absolute;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(20, 30, 48, 0.95) 0%, rgba(36, 59, 85, 0.95) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  transition: opacity 0.8s ease-out;
 }
-@keyframes pulseLogo {
-    0% { filter: drop-shadow(0 0 10px rgba(255, 150, 50, 0.3)); transform: scale(0.98); }
-    100% { filter: drop-shadow(0 0 25px rgba(255, 150, 50, 0.8)); transform: scale(1.02); }
+
+.glass-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 50px 40px;
+  text-align: center;
+  width: 85%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-#unity-progress-bar-empty { 
-    margin: 20px auto 0 auto; 
-    width: 141px; 
-    height: 18px; 
-    background: url('progress-bar-empty-dark.png') no-repeat center;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+
+.game-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 5px 0;
+  background: linear-gradient(90deg, #10B981 0%, #FBBF24 50%, #EF4444 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
-#unity-progress-bar-full { 
-    width: 0%; 
-    height: 18px; 
-    background: url('progress-bar-full-dark.png') no-repeat center;
-    border-radius: 10px;
-    transition: width 0.3s ease-out;
+
+.game-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 40px;
+  font-weight: 300;
+  letter-spacing: 1px;
 }
-#unity-progress-text {
-    color: #ffdeb3;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    font-weight: 600;
-    text-align: center;
-    margin-top: 15px;
-    font-size: 15px;
-    letter-spacing: 0.5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+
+#custom-progress-container {
+  width: 100%;
 }
-#unity-warning { position: absolute; left: 50%; top: 5%; transform: translate(-50%); background: white; padding: 10px; display: none }
+
+#custom-progress-bar {
+  width: 100%;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+#custom-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #10B981, #FBBF24);
+  border-radius: 10px;
+  transition: width 0.2s ease-out;
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+}
+
+#loading-text {
+  margin-top: 15px;
+  font-size: 0.95rem;
+  color: #bbb;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-family: monospace;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.05);
+  border-top-color: #10B981;
+  border-radius: 50%;
+  animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  margin-bottom: 25px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#unity-warning { 
+  position: absolute; 
+  left: 50%; 
+  top: 5%; 
+  transform: translate(-50%); 
+  background: white; 
+  padding: 10px 20px; 
+  display: none; 
+  z-index: 100; 
+  color: #333; 
+  border-radius: 8px; 
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
